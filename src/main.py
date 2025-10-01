@@ -1,23 +1,33 @@
+from typing import Union
+
 import flet as ft
 
 
-async def main(page: ft.Page):
-    ip_address = None
+class Monitor:
+    def __init__(self):
+        self.select_ip = ft.TextField(
+            keyboard_type=ft.KeyboardType.URL, on_submit=self.set_ip
+        )
 
-    async def set_ip(event: ft.ControlEvent) -> None:
-        global ip_address
-        ip_address = event.control.value
+    ip_address: Union[str, None] = None
 
-    select_ip = ft.TextField(keyboard_type=ft.KeyboardType.URL, on_submit=set_ip)
+    async def set_ip(self, event: ft.ControlEvent) -> None:
+        self.ip_address = event.control.value
 
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.title = "Centauri Carbon Monitor"
-    page.window.width = 720
-    page.window.height = 1080
-    page.theme_mode = ft.ThemeMode.DARK
+    async def main(self, page: ft.Page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+        page.title = "Centauri Carbon Monitor"
+        page.window.width = 720
+        page.window.height = 1080
+        page.theme_mode = ft.ThemeMode.DARK
 
-    page.add(select_ip)
-    page.update()
+        page.add(self.select_ip)
+        self.page = page
+        self.update()
+
+    def update(self) -> None:
+        self.page.update()
 
 
-ft.app(main)
+app = Monitor()
+ft.app(target=app.main)

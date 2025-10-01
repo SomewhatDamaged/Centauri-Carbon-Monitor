@@ -8,11 +8,15 @@ class Monitor:
         self.select_ip = ft.TextField(
             keyboard_type=ft.KeyboardType.URL, on_submit=self.set_ip
         )
+        self.show_ip = ft.Text(value="None", visible=False)
 
     ip_address: Union[str, None] = None
 
     async def set_ip(self, event: ft.ControlEvent) -> None:
         self.ip_address = event.control.value
+        self.show_ip.value = self.ip_address
+        self.show_ip.visible = True
+        self.update()
 
     async def main(self, page: ft.Page):
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -22,6 +26,7 @@ class Monitor:
         page.theme_mode = ft.ThemeMode.DARK
 
         page.add(self.select_ip)
+        page.add(self.show_ip)
         self.page = page
         self.update()
 

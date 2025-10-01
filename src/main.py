@@ -1,26 +1,23 @@
 import flet as ft
 
 
-def main(page: ft.Page):
-    counter = ft.Text("0", size=50, data=0)
+async def main(page: ft.Page):
+    ip_address = None
 
-    def increment_click(e):
-        counter.data += 1
-        counter.value = str(counter.data)
-        counter.update()
+    async def set_ip(event: ft.ControlEvent) -> None:
+        global ip_address
+        ip_address = event.control.value
 
-    page.floating_action_button = ft.FloatingActionButton(
-        icon=ft.Icons.ADD, on_click=increment_click
-    )
-    page.add(
-        ft.SafeArea(
-            ft.Container(
-                counter,
-                alignment=ft.alignment.center,
-            ),
-            expand=True,
-        )
-    )
+    select_ip = ft.TextField(keyboard_type=ft.KeyboardType.URL, on_submit=set_ip)
+
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.title = "Centauri Carbon Monitor"
+    page.window.width = 720
+    page.window.height = 1080
+    page.theme_mode = ft.ThemeMode.DARK
+
+    page.add(select_ip)
+    page.update()
 
 
 ft.app(main)

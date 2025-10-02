@@ -40,10 +40,15 @@ class CarbonData:
     url = "ws://{self.target}:3030/websocket"
     data = Stats()
     error: str = None
+    _video: str = "http://{self.target}:3031/video"
 
     @getattr
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return asdict(self.data)
+
+    @getattr
+    def video(self) -> str:
+        return self._video.format()
 
     def __init__(self, target: str = None) -> None:
         self.target = target

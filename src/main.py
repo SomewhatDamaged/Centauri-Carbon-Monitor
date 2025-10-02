@@ -117,7 +117,7 @@ class Monitor:
                 self.process_data()
                 await asyncio.sleep(1)
             except asyncio.CancelledError:
-                return "Exiting..."
+                return
 
     target: Union[str, None] = None
 
@@ -128,13 +128,11 @@ class Monitor:
         self.select_ip.update()
 
     async def main(self, page: ft.Page):
-        log.debug("Starting!")
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.title = "Centauri Carbon Monitor"
         page.window.width = 400
         page.window.height = 500
         page.theme_mode = ft.ThemeMode.DARK
-        log.debug("Basic layout done")
         self.data_layout()
 
         page.add(self.select_ip)

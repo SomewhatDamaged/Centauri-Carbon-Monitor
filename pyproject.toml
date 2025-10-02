@@ -3,13 +3,13 @@ name = "centauri-carbon-monitor"
 version = "0.1.0"
 description = "Centauri Carbon Monitor will show the progress of a Centauri Carbon 3D printer on the local network."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.7"
 authors = [
     { name = "Damaged", email = "dev@excessive.space" }
 ]
 dependencies = [
   "flet==0.28.3",
-  "aiohttp",
+  "aiohttp==3.12.15",
 ]
 
 [tool.flet]

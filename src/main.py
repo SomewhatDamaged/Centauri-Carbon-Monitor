@@ -26,9 +26,7 @@ log.addHandler(fhandler)
 
 class Monitor:
     def __init__(self):
-        self.select_ip = ft.TextField(
-            keyboard_type=ft.KeyboardType.URL, on_submit=self.set_ip
-        )
+        self.select_ip = ft.TextField(on_submit=self.set_ip)
         self.show_ip = ft.Text(value="None", visible=False)
         self.printer = CarbonData()
         self.printer._log = log

@@ -97,7 +97,7 @@ class CarbonData:
 
         assert status or print_info, "No status and print info."
 
-        print_status = print_info.get("Status")
+        print_status = int(print_info.get("Status"))
         time = int(print_info.get("TotalTicks", 0))
         bed_temp = int(status.get("TempOfHotbed", 0))
         enclosure_temp = int(status.get("TempOfBox", 0))

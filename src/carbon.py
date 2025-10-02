@@ -1,6 +1,7 @@
 import asyncio
 import json
 from dataclasses import asdict, dataclass
+from typing import Union
 
 import aiohttp
 
@@ -41,14 +42,19 @@ class CarbonData:
     data = Stats()
     error: str = None
     _video: str = "http://{self.target}:3031/video"
+    _connected = asyncio.Lock()
 
     @getattr
     def to_dict(self) -> dict:
         return asdict(self.data)
 
     @getattr
-    def video(self) -> str:
-        return self._video.format()
+    def video(self) -> Union[str, None]:
+        return self._video.format() if self.connected else None
+
+    @getattr
+    def connected(self) -> bool:
+        return self._connected.locked()
 
     def __init__(self, target: str = None) -> None:
         self.target = target
@@ -60,6 +66,7 @@ class CarbonData:
             while not self.target:
                 await asyncio.sleep(5)
             connection = session.ws_connect(url=self.url.format())
+            await self._connected.acquire()
             async for message in connection:
                 self.ws_process_message(message)
         except asyncio.CancelledError:
@@ -72,6 +79,7 @@ class CarbonData:
             self.error = e
         finally:
             await session.close()
+            self._connected.release()
 
     def ws_process_message(self, message: aiohttp.WSMessage) -> None:
         if message.type != aiohttp.WSMsgType.TEXT:

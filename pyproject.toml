@@ -10,6 +10,7 @@ authors = [
 dependencies = [
   "flet==0.28.3",
   "flet-webview==0.1.0",
+  "aiohttp",
 ]
 
 [tool.flet]

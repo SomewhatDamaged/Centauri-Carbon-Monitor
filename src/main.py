@@ -8,7 +8,7 @@ import flet as ft
 from carbon import CarbonData
 
 log = logging.getLogger("Carbon")
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.INFO)
 fhandler = logging.handlers.RotatingFileHandler(  # type: ignore
     filename="carbon.log",
     encoding="utf-8",

@@ -36,10 +36,10 @@ class Stats:
 
 
 class CarbonData:
-    target = None
-    websocket = None
+    target: str = None
     url = "ws://{self.target}:3030/websocket"
     data = Stats()
+    error: str = None
 
     @getattr
     def to_dict(self):
@@ -63,6 +63,8 @@ class CarbonData:
         except aiohttp.client_exceptions:
             await asyncio.sleep(timeout)
             return asyncio.create_task(self.connect(timeout=max(timeout * timeout, 2)))
+        except Exception as e:
+            self.error = e
         finally:
             await session.close()
 

@@ -112,7 +112,7 @@ class CarbonData:
             if self._connected.locked():
                 self.log("Freeing lock!")
                 self._connected.release()
-            if not tickler.done():
+            if tickler is not None and not tickler.done():
                 tickler.cancel()
 
     async def request_info(self) -> None:

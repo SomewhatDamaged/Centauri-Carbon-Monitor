@@ -76,23 +76,17 @@ class CarbonData:
         try:
             while not self.target:
                 await asyncio.sleep(1)
-            self.log(f"Connecting to: {self.url.format(target=self.target)}")
             async with session.ws_connect(
                 url=self.url.format(target=self.target)
             ) as self._connection:
                 tickler = asyncio.create_task(self.request_info())
-                self.log("Connected!")
                 await self._connected.acquire()
-                self.log("Locked!")
                 async for message in self._connection:
                     self.ws_process_message(message)
         except asyncio.CancelledError:
-            self.log("Exiting!")
-            """closing"""
             return
         except aiohttp.ClientError:
             exc_type, _, _ = sys.exc_info()
-            self.log("HTTP error!")
             if self._log:
                 self._log.exception(exc_type)
             self.target = None
@@ -100,17 +94,13 @@ class CarbonData:
             return asyncio.create_task(self.connect(timeout=max(timeout * timeout, 2)))
         except Exception:
             exc_type, _, _ = sys.exc_info()
-            self.log("Error!")
             if self._log:
                 self._log.exception(exc_type)
         else:
             return asyncio.create_task(self.connect(timeout=max(timeout * timeout, 2)))
         finally:
-            self.log("Closing session")
             await session.close()
-            self.log("Checking lock...")
             if self._connected.locked():
-                self.log("Freeing lock!")
                 self._connected.release()
             if tickler is not None and not tickler.done():
                 tickler.cancel()
@@ -136,13 +126,11 @@ class CarbonData:
             return "Exiting"
 
     def ws_process_message(self, message: aiohttp.WSMessage) -> None:
-        self.log("Processing a message...")
         if message.type != aiohttp.WSMsgType.TEXT:
             return
         data = json.loads(message.data)
         try:
             self.process_data(data)
-            self.log(f"Processed message: {self.to_dict}")
         except AssertionError:
             return
 
@@ -199,10 +187,6 @@ class CarbonData:
         self.data.total_layers = (
             total_layers if total_layers else self.data.total_layers
         )
-
-    def log(self, message: str):
-        if self._log:
-            self._log.debug(message)
 
 
 def time_format(seconds: int) -> str:

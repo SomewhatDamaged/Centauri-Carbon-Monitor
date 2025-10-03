@@ -23,6 +23,14 @@ fmt = logging.Formatter(
 fhandler.setFormatter(fmt)
 log.addHandler(fhandler)
 
+COLORS = [
+    ft.Colors.RED,
+    ft.Colors.ORANGE,
+    ft.Colors.YELLOW,
+    ft.Colors.LIME,
+    ft.Colors.GREEN,
+]
+
 
 class Monitor:
     def __init__(self):
@@ -37,14 +45,20 @@ class Monitor:
         self.layer_progress_text.value = (
             f"Layer: {data.current_layer} / {data.total_layers}"
         )
+
         self.layer_progress.value = (
             float(data.current_layer / data.total_layers) if data.total_layers else 0.0
         )
+        if data.total_layers:
+            self.layer_progress.color = COLORS[
+                int(round((data.current_layer / data.total_layers * 5) % 5, 0))
+            ]
         self.temperatures.value = f"Temperature\nNozzle: {data.nozzle_temp}C / {data.target_nozzle_temp}C\nBed: {data.bed_temp}C / {data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
         self.fans.value = f"Fan Speeds\nModel: {data.model_fan_speed}%\nAux: {data.aux_fan_speed}%\nBox: {data.box_fan_speed}%"
         self.z_offset.value = f"Z-Offset: {data.z_offset}"
         self.progress_text.value = f"Progress: {data.progress}%"
         self.progress.value = data.progress / 100.0
+        self.progress.color = COLORS[int(round((data.progress / 20) % 5, 0))]
         self.time_text.value = f"Time: {data.remaining_time} / {data.total_time}"
         self._data_layout.update()
 

@@ -35,29 +35,24 @@ class Monitor:
         data = self.printer.data
         self.status.value = f"Status: {data.print_status}"
         self.layer_progress_text.value = (
-            f"Layer: {data.current_layer}/{data.total_layers}"
+            f"Layer: {data.current_layer} / {data.total_layers}"
         )
         self.layer_progress.value = (
             float(data.current_layer / data.total_layers) if data.total_layers else 0.0
         )
-        self.temperatures.value = f"Temperature\nNozzle: {data.nozzle_temp}C/{data.target_nozzle_temp}C\nBed: {data.bed_temp}C/{data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
+        self.temperatures.value = f"Temperature\nNozzle: {data.nozzle_temp}C / {data.target_nozzle_temp}C\nBed: {data.bed_temp}C / {data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
         self.fans.value = f"Fan Speeds\nModel: {data.model_fan_speed}%\nAux: {data.aux_fan_speed}%\nBox: {data.box_fan_speed}%"
         self.z_offset.value = f"Z-Offset: {data.z_offset}"
         self.progress_text.value = f"Progress: {data.progress}%"
         self.progress.value = data.progress / 100.0
-        self.time_text.value = f"Time remaining: {data.remaining_time}"
-        self.time.value = (
-            float(data.elapsed_time_raw / data.total_time_raw)
-            if data.total_time_raw
-            else 0
-        )
+        self.time_text.value = f"Time: {data.remaining_time} / {data.total_time}"
         self._data_layout.update()
 
     def data_layout(self) -> None:
         data = self.printer.data
         self.status = ft.Text(value=f"Status: {data.print_status}")
         self.layer_progress_text = ft.Text(
-            value=f"Layer: {data.current_layer}/{data.total_layers}"
+            value=f"Layer: {data.current_layer} / {data.total_layers}"
         )
         self.layer_progress = ft.ProgressBar(
             color=ft.Colors.GREEN,
@@ -68,7 +63,7 @@ class Monitor:
             ),
         )
         self.temperatures = ft.Text(
-            value=f"Temperature\nNozzle: {data.nozzle_temp}C/{data.target_nozzle_temp}C\nBed: {data.bed_temp}C/{data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
+            value=f"Temperature\nNozzle: {data.nozzle_temp}C / {data.target_nozzle_temp}C\nBed: {data.bed_temp}C / {data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
         )
         self.fans = ft.Text(
             value=f"Fan Speeds\nModel: {data.model_fan_speed}\nAux: {data.aux_fan_speed}\nBox: {data.box_fan_speed}"
@@ -79,14 +74,8 @@ class Monitor:
             color=ft.Colors.GREEN,
             value=data.progress / 100.0,
         )
-        self.time_text = ft.Text(value=f"Time remaining: {data.remaining_time}")
-        self.time = ft.ProgressBar(
-            color=ft.Colors.GREEN,
-            value=(
-                float(data.elapsed_time_raw / data.total_time_raw)
-                if data.total_time_raw
-                else 0.0
-            ),
+        self.time_text = ft.Text(
+            value=f"Time: {data.remaining_time} / {data.total_time}"
         )
         self._data_layout = ft.Column(
             controls=[
@@ -96,7 +85,6 @@ class Monitor:
                 self.progress_text,
                 self.progress,
                 self.time_text,
-                self.time,
                 self.temperatures,
                 self.fans,
             ],

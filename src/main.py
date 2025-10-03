@@ -33,6 +33,8 @@ COLORS = [
 STATUS = {
     "Printing": ft.Colors.RED,
     "Paused": ft.Colors.YELLOW,
+    "Pausing": ft.Colors.YELLOW,
+    "Resuming": ft.Colors.YELLOW,
     "Idle": ft.Colors.GREY,
     "Preparing": ft.Colors.ORANGE,
     "Completed": ft.Colors.GREEN,
@@ -54,7 +56,13 @@ class Monitor:
             self._data_layout.visible = False
         self.status.value = f"Status: {data.print_status}"
         self.status.color = STATUS.get(data.print_status, ft.Colors.WHITE)
-        if data.print_status in ["Paused", "Preparing", "Printing"]:
+        if data.print_status in [
+            "Paused",
+            "Preparing",
+            "Printing",
+            "Pausing",
+            "Resuming",
+        ]:
             self.layer_progress_text.visible = True
             self.layer_progress.visible = True
             self.progress_text.visible = True
@@ -78,7 +86,7 @@ class Monitor:
         )
         if data.total_layers:
             self.layer_progress.color = COLORS[
-                int(round((data.current_layer / data.total_layers * 5) % 5, 0))
+                int(round((data.current_layer / data.total_layers * 20) % 5, 0))
             ]
         self.temperatures.value = f"Temperature\nNozzle: {data.nozzle_temp}C / {data.target_nozzle_temp}C\nBed: {data.bed_temp}C / {data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
         self.fans.value = f"Fan Speeds\nModel: {data.model_fan_speed}%\nAux: {data.aux_fan_speed}%\nBox: {data.box_fan_speed}%"

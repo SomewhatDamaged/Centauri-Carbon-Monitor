@@ -17,6 +17,8 @@ STATUS = {
     9: "Complete",
     0: "Idle",
     6: "Paused",
+    20: "Resuming",
+    5: "Pausing",
 }
 
 

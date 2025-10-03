@@ -30,6 +30,13 @@ COLORS = [
     ft.Colors.LIME,
     ft.Colors.GREEN,
 ]
+STATUS = {
+    "Printing": ft.Colors.RED,
+    "Paused": ft.Colors.YELLOW,
+    "Idle": ft.Colors.GREY,
+    "Preparing": ft.Colors.ORANGE,
+    "Completed": ft.Colors.GREEN,
+}
 
 
 class Monitor:
@@ -41,11 +48,31 @@ class Monitor:
 
     def process_data(self) -> None:
         data = self.printer.data
+        if self.status != "Unknown":
+            self._data_layout.visible = True
+        else:
+            self._data_layout.visible = False
         self.status.value = f"Status: {data.print_status}"
+        self.status.color = STATUS.get(data.print_status, ft.Colors.WHITE)
+        if data.print_status in ["Paused", "Preparing", "Printing"]:
+            self.layer_progress_text.visible = True
+            self.layer_progress.visible = True
+            self.progress_text.visible = True
+            self.progress.visible = True
+        elif data.print_status == "Complete":
+            self.layer_progress_text.visible = True
+            self.layer_progress.visible = False
+            self.progress_text.visible = False
+            self.progress.visible = False
+            self.layer_progress_text.value = f"Completed {data.total_layers} layers!"
+        else:
+            self.layer_progress_text.visible = False
+            self.layer_progress.visible = False
+            self.progress_text.visible = False
+            self.progress.visible = False
         self.layer_progress_text.value = (
             f"Layer: {data.current_layer} / {data.total_layers}"
         )
-
         self.layer_progress.value = (
             float(data.current_layer / data.total_layers) if data.total_layers else 0.0
         )
@@ -108,7 +135,7 @@ class Monitor:
     async def update_data(self) -> None:
         while True:
             try:
-                while not self.printer.connected:
+                while self.printer.data.print_status == "Unknown":
                     if self._data_layout.visible:
                         self._data_layout.visible = False
                         self._data_layout.update()

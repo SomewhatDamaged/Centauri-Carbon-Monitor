@@ -132,7 +132,7 @@ class Monitor:
             value=f"Temperature\nNozzle: {data.nozzle_temp}C / {data.target_nozzle_temp}C\nBed: {data.bed_temp}C / {data.target_bed_temp}C\nBox: {data.enclosure_temp}C"
         )
         self.fans = ft.Text(
-            value=f"Fan Speeds\nModel: {data.model_fan_speed}\nAux: {data.aux_fan_speed}\nBox: {data.box_fan_speed}"
+            value=f"Fan Speeds\nModel: {data.model_fan_speed}\nAux: {data.aux_fan_speed}\nBox: {data.box_fan_speed}",
         )
         self.z_offset = ft.Text(value=f"Z-Offset: {data.z_offset}")
         self.progress_text = ft.Text(value=f"Progress: {data.progress}%")
@@ -151,8 +151,17 @@ class Monitor:
                 self.progress_text,
                 self.progress,
                 self.time_text,
-                self.temperatures,
-                self.fans,
+                ft.Container(
+                    content=ft.Row(
+                        controls=[
+                            ft.Container(content=self.temperatures),
+                            ft.Container(content=self.fans),
+                        ],
+                        expand=True,
+                        alignment=ft.alignment.center,
+                    ),
+                    expand=True,
+                ),
             ],
             visible=False,
             horizontal_alignment=ft.CrossAxisAlignment.START,
@@ -185,16 +194,21 @@ class Monitor:
     async def main(self, page: ft.Page):
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.title = "Centauri Carbon Monitor"
-        page.window.width = 400
-        page.window.height = 500
+        page.window.width = 350
+        page.window.height = 400
         page.theme_mode = ft.ThemeMode.DARK
         page.horizontal_alignment = ft.CrossAxisAlignment.START
         self.data_layout()
-
-        page.add(self.select_ip)
-        page.add(ft.Divider())
-        self.data_layout()
-        page.add(self._data_layout)
+        layout = ft.Column(
+            alignment=ft.alignment.top_center,
+            controls=[
+                self.select_ip,
+                ft.Divider(),
+                self._data_layout,
+            ],
+            expand=True,
+        )
+        page.add(layout)
         page.update()
         self.page = page
         asyncio.create_task(self.update_data())

@@ -68,6 +68,7 @@ class Monitor:
             self.progress_text.visible = True
             self.progress.visible = True
             self.time_text.visible = True
+            self.fans.visible = True
             self.layer_progress_text.value = (
                 f"Layer: {data.current_layer} / {data.total_layers}"
             )

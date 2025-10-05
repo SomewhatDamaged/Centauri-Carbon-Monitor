@@ -198,6 +198,8 @@ class Monitor:
         page.window.height = 400
         page.theme_mode = ft.ThemeMode.DARK
         page.horizontal_alignment = ft.CrossAxisAlignment.START
+        page.window.always_on_top = True
+        page.window.resizable = False
         self.data_layout()
         layout = ft.Column(
             alignment=ft.alignment.top_center,

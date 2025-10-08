@@ -50,18 +50,21 @@ class Monitor:
 
     def process_data(self) -> None:
         data = self.printer.data
-        if data.print_status.startswith("Unknown"):
+        if data.print_status == "Unknown":
             self._data_layout.visible = False
         else:
             self._data_layout.visible = True
-        self.status.value = f"Status: {data.print_status}"
-        self.status.color = STATUS.get(data.print_status, ft.Colors.WHITE)
+        self.status.text = data.print_status
+        self.status.style = ft.TextStyle(
+            color=STATUS.get(data.print_status, ft.Colors.WHITE)
+        )
         if data.print_status in [
             "Paused",
             "Preparing",
             "Printing",
             "Pausing",
             "Resuming",
+            "Paused (Error!)",
         ]:
             self.layer_progress_text.visible = True
             self.layer_progress.visible = True
@@ -116,7 +119,13 @@ class Monitor:
 
     def data_layout(self) -> None:
         data = self.printer.data
-        self.status = ft.Text(value=f"Status: {data.print_status}")
+
+        self.status = ft.TextSpan(
+            text=data.print_status,
+            style=ft.TextStyle(
+                color=ft.TextStyle(color=STATUS.get(data.print_status, ft.Colors.WHITE))
+            ),
+        )
         self.layer_progress_text = ft.Text(
             value=f"Layer: {data.current_layer} / {data.total_layers}"
         )
@@ -145,7 +154,12 @@ class Monitor:
         )
         self._data_layout = ft.Column(
             controls=[
-                self.status,
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Status: "),
+                        self.status,
+                    ]
+                ),
                 self.layer_progress_text,
                 self.layer_progress,
                 self.progress_text,

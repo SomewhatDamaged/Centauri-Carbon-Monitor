@@ -19,6 +19,7 @@ STATUS = {
     6: "Paused",
     20: "Resuming",
     5: "Pausing",
+    10: "Paused (Error!)",
 }
 
 
@@ -128,6 +129,7 @@ class CarbonData:
             return "Exiting"
 
     def ws_process_message(self, message: aiohttp.WSMessage) -> None:
+        self._log.debug(f"{message = }")
         if message.type != aiohttp.WSMsgType.TEXT:
             return
         data = json.loads(message.data)

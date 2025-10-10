@@ -62,7 +62,6 @@ class Monitor:
             "Paused",
             "Printing",
             "Pausing",
-            "Resuming",
             "Paused (Error!)",
         ]:
             self.layer_progress_text.visible = True
@@ -75,7 +74,7 @@ class Monitor:
                 f"Layer: {data.current_layer} / {data.total_layers}"
             )
             self.time_text.value = f"Time: {data.remaining_time} / {data.total_time}"
-        elif data.print_status == "Preparing":
+        elif data.print_status in ["Preparing", "Resuming"]:
             self.layer_progress_text.visible = False
             self.time_text.visible = False
             self.layer_progress.visible = False

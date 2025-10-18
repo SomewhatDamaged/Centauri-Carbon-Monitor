@@ -20,6 +20,7 @@ STATUS = {
     20: "Resuming",
     5: "Pausing",
     10: "Paused (Error!)",
+    8: "Stopped by User!",
 }
 
 

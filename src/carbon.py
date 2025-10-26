@@ -21,6 +21,7 @@ STATUS = {
     5: "Pausing",
     10: "Paused (Error!)",
     8: "Stopped by User!",
+    18: "Leveling Complete",
 }
 
 

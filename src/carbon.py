@@ -160,6 +160,12 @@ class CarbonData:
         total_layers = int(print_info.get("TotalLayer", 0))
         elapsed_time = int(print_info.get("CurrentTicks", 0))
 
+        if print_status in [0, 1, 8, 16, 18, 21]:
+            time = 0
+            current_layer = 0
+            total_layers = 0
+            elapsed_time = 0
+
         self.data.print_status = STATUS.get(print_status, f"Unknown: {print_status}")
         self.data.print_status_number = print_status
         self.data.progress = round(print_info.get("Progress", 0.0), 1)

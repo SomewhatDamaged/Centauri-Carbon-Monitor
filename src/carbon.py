@@ -11,13 +11,13 @@ import aiohttp
 
 STATUS = {
     1: "Preparing",
-    16: "Preparing",
+    16: "Preheating",
     21: "Preparing",
     13: "Printing",
     9: "Complete",
     0: "Idle",
     6: "Paused",
-    20: "Resuming",
+    20: "Automatic Leveling",
     5: "Pausing",
     10: "Paused (Error!)",
     8: "Stopped by User!",
@@ -47,6 +47,7 @@ class Stats:
     remaining_time_raw: int = 0
     total_time: str = "0"
     total_time_raw: int = 0
+    print_status_number: int = 0
 
 
 class CarbonData:
@@ -160,6 +161,7 @@ class CarbonData:
         elapsed_time = int(print_info.get("CurrentTicks", 0))
 
         self.data.print_status = STATUS.get(print_status, f"Unknown: {print_status}")
+        self.data.print_status_number = print_status
         self.data.progress = round(print_info.get("Progress", 0.0), 1)
         self.data.elapsed_time = time_format(elapsed_time)
         self.data.elapsed_time_raw = elapsed_time

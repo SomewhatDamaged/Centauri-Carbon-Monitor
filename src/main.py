@@ -54,7 +54,7 @@ class Monitor:
             self._data_layout.visible = False
         else:
             self._data_layout.visible = True
-        self.status.text = data.print_status
+        self.status.text = f"{data.print_status}: {data.print_status_number}"
         self.status.style = ft.TextStyle(
             color=STATUS.get(data.print_status, ft.Colors.WHITE)
         )
@@ -74,7 +74,11 @@ class Monitor:
                 f"Layer: {data.current_layer} / {data.total_layers}"
             )
             self.time_text.value = f"Time: {data.remaining_time} / {data.total_time}"
-        elif data.print_status in ["Preparing", "Resuming"]:
+        elif data.print_status in [
+            "Preparing",
+            "Resuming",
+            "Preheating",
+        ]:
             self.layer_progress_text.visible = False
             self.time_text.visible = False
             self.layer_progress.visible = False
@@ -91,7 +95,7 @@ class Monitor:
             self.fans.visible = True
             self.layer_progress_text.value = f"Completed {data.total_layers} layers!"
             self.time_text.value = f"Time: {data.elapsed_time}"
-        elif data.print_status == "Idle":
+        elif data.print_status in ["Idle", "Automatic Leveling"]:
             self.layer_progress_text.visible = False
             self.time_text.visible = False
             self.layer_progress.visible = False
